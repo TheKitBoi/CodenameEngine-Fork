@@ -53,7 +53,7 @@ class Button extends FlxObject {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        var mouseInput = DesktopMain.instance.mouseInput;
+        var mouseInput = DesktopMain.mouseInput;
         if (mouseInput.overlaps(normalSprite, camera)) {
             if (mouseInput.justReleased) {
                 callback();
@@ -103,11 +103,8 @@ class Button extends FlxObject {
             default:    normalSprite;
         };
         spr.resize(width, height);
-        for(sprite in [spr, label]) {
-            sprite.cameras = cameras;
-            sprite.setPosition(x, y);
-            sprite.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-        }
+        for(sprite in [spr, label])
+            sprite.copyProperties(this);
         spr.draw();
         label.y += (height - label.height) / 2;
         label.draw();

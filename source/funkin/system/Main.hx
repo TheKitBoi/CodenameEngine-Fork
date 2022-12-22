@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.desktop.DesktopMain;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
@@ -139,10 +140,13 @@ class Main extends Sprite
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
+		DesktopMain.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
 		#end
-		
+		#if ALLOW_MULTITASKING
+		funkin.multitasking.MultiTaskingHandler.init();
+		#end
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end

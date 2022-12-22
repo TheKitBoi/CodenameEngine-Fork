@@ -1,5 +1,6 @@
 package funkin.desktop;
 
+import flixel.math.FlxRect;
 import openfl.geom.Rectangle;
 import flixel.FlxObject;
 import lime.app.Application;
@@ -24,14 +25,22 @@ class DesktopMain extends MusicBeatState {
 
     public static var instance:DesktopMain;
 
-    public var mouseInput:MouseInput = new MouseInput();
+    public static var mouseInput:MouseInput;
 
     public static var theme:Theme = null;
+
+    public static function init() {
+        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
+        mouseInput = new MouseInput();
+
+        FlxG.signals.preUpdate.add(function() {
+            mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
+        });
+    }
 
     public override function create() {
         super.create();
 
-        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
         instance = this;
         
         FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
@@ -132,11 +141,11 @@ class MouseInput {
     }
 
     public function overlaps(spr:FlxObject, ?camera:FlxCamera) {
-        return overlapsRect(spr, new Rectangle(spr.x, spr.y, spr.width, spr.height), camera);
+        return overlapsRect(spr, new FlxRect(spr.x, spr.y, spr.width, spr.height), camera);
         // return FlxG.mouse.overlaps(spr, camera);
     }
 
-    public function overlapsRect(spr:FlxBasic, rect:Rectangle, ?camera:FlxCamera) {
+    public function overlapsRect(spr:FlxBasic, rect:FlxRect, ?camera:FlxCamera) {
         if (__cancelled) return false;
         if (camera == null) camera = FlxG.camera;
         if (spr is FlxObject) {
